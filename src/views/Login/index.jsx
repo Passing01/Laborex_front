@@ -51,8 +51,10 @@ const Login = () => {
                     </Typography>
                   </Grid>
                   <Grid item>
-                    <RouterLink to="/">
-                      <img alt="Auth method" src={Logo} />
+                    <RouterLink to="/" style={{ textDecoration: 'none' }}>
+                      <Typography variant="h3" sx={{ fontWeight: 700, color: theme.palette.primary.main }}>
+                        LABOREX
+                      </Typography>
                     </RouterLink>
                   </Grid>
                 </Grid>

@@ -10,9 +10,21 @@ export default defineConfig(({ mode }) => {
 
   return {
     server: {
-      // this ensures that the browser opens upon server start
       open: true,
-      port: PORT
+      port: PORT,
+      proxy: {
+        '/api': {
+          target: 'https://gestion-suivi-documentaire.onrender.com',
+          changeOrigin: true,
+          secure: true,
+          onProxyRes: (proxyRes) => {
+            const sc = proxyRes.headers['set-cookie'];
+            if (sc) {
+              proxyRes.headers['set-cookie'] = sc.map(s => s.replace(/Secure;/gi, ''));
+            }
+          }
+        }
+      }
     },
     define: {
       global: 'window'

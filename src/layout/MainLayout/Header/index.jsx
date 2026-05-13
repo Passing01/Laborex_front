@@ -3,7 +3,7 @@ import React from 'react';
 
 // material-ui
 import { useTheme } from '@mui/material/styles';
-import { Box, Grid, IconButton } from '@mui/material';
+import { Box, Grid, IconButton, Typography } from '@mui/material';
 
 // project import
 import SearchSection from './SearchSection';
@@ -27,7 +27,9 @@ const Header = ({ drawerToggle }) => {
           <Box sx={{ display: { xs: 'none', md: 'block' } }}>
             <Grid item>
               <Box mt={0.5}>
-                <img src={logo} alt="Logo" />
+                <Typography variant="h3" sx={{ color: '#fff', fontWeight: 700, letterSpacing: '1px' }}>
+                  LABOREX
+                </Typography>
               </Box>
             </Grid>
           </Box>

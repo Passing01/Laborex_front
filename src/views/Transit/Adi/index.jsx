@@ -58,9 +58,7 @@ const AdiList = () => {
 
     setUploading(true);
     try {
-      await api.post('/api/transit/adi/import-excel/', formData, {
-        headers: { 'Content-Type': 'multipart/form-data' }
-      });
+      await api.post('/api/transit/adi/import-excel/', formData);
       fetchAdi();
     } catch (err) {
       alert(`Erreur d'importation: ${err.message}`);
@@ -132,8 +130,9 @@ const AdiList = () => {
             <TableHead>
               <TableRow>
                 <TableCell>Numéro ADI</TableCell>
+                <TableCell>Factures</TableCell>
                 <TableCell>Fournisseur</TableCell>
-                <TableCell>Pays</TableCell>
+                <TableCell>Date Réception</TableCell>
                 <TableCell>Statut</TableCell>
                 <TableCell align="right">Actions</TableCell>
               </TableRow>
@@ -146,8 +145,9 @@ const AdiList = () => {
               ) : adiList.map((adi) => (
                 <TableRow key={adi.id} hover>
                   <TableCell><strong>{adi.numero_adi}</strong></TableCell>
+                  <TableCell>{adi.factures || 'N/A'}</TableCell>
                   <TableCell>{adi.fournisseur || 'N/A'}</TableCell>
-                  <TableCell>{adi.pays || 'N/A'}</TableCell>
+                  <TableCell>{adi.date_reception || 'N/A'}</TableCell>
                   <TableCell>
                     <TextField
                       select

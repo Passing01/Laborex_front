@@ -3,7 +3,7 @@ import React from 'react';
 
 // material-ui
 import { useTheme, styled } from '@mui/material/styles';
-import { useMediaQuery, Divider, Drawer, Grid, Box } from '@mui/material';
+import { useMediaQuery, Divider, Drawer, Grid, Box, Typography } from '@mui/material';
 
 // third party
 import PerfectScrollbar from 'react-perfect-scrollbar';
@@ -46,7 +46,9 @@ const Sidebar = ({ drawerOpen, drawerToggle, window }) => {
           }}
         >
           <Grid item>
-            <img src={logo} alt="Logo" />
+            <Typography variant="h3" sx={{ color: '#fff', fontWeight: 700, letterSpacing: '1px' }}>
+              LABOREX
+            </Typography>
           </Grid>
         </Grid>
       </Box>
