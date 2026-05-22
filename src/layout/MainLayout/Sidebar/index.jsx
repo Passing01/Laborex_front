@@ -47,7 +47,7 @@ const Sidebar = ({ drawerOpen, drawerToggle, window }) => {
         >
           <Grid item>
             <Typography variant="h3" sx={{ color: '#fff', fontWeight: 700, letterSpacing: '1px' }}>
-              LABOREX
+              LABOREX BURKINA
             </Typography>
           </Grid>
         </Grid>
@@ -55,7 +55,7 @@ const Sidebar = ({ drawerOpen, drawerToggle, window }) => {
       <Divider />
       <PerfectScrollbar style={{ height: 'calc(100vh - 65px)', padding: '10px' }}>
         <MenuList />
-        
+
       </PerfectScrollbar>
     </>
   );

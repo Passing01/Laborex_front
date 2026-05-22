@@ -1,13 +1,13 @@
 import React from 'react';
-import { 
-  Box, 
-  Container, 
-  Typography, 
-  Button, 
-  Grid, 
-  Stack, 
-  Card, 
-  Avatar, 
+import {
+  Box,
+  Container,
+  Typography,
+  Button,
+  Grid,
+  Stack,
+  Card,
+  Avatar,
   useTheme,
   AppBar,
   Toolbar
@@ -53,7 +53,7 @@ const LandingPage = () => {
         <Container maxWidth="lg">
           <Toolbar disableGutters sx={{ justifyContent: 'space-between' }}>
             <Typography variant="h4" sx={{ fontWeight: 800, color: theme.palette.primary.main }}>
-              LABOREX <span style={{ color: '#000' }}>TRANSIT</span>
+              LABOREX <span style={{ color: '#000' }}>BURKINA</span>
             </Typography>
             <Button variant="contained" onClick={() => navigate('/login')} sx={{ borderRadius: 2 }}>
               Espace Personnel
@@ -63,9 +63,9 @@ const LandingPage = () => {
       </AppBar>
 
       {/* Hero Section */}
-      <Box sx={{ 
-        pt: 10, 
-        pb: 15, 
+      <Box sx={{
+        pt: 10,
+        pb: 15,
         background: 'linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%)',
         position: 'relative',
         overflow: 'hidden'
@@ -78,7 +78,7 @@ const LandingPage = () => {
                   Optimisez votre <span style={{ color: theme.palette.primary.main }}>Suivi Documentaire</span> de Transit.
                 </Typography>
                 <Typography variant="h5" color="textSecondary" sx={{ lineHeight: 1.6 }}>
-                  La plateforme centralisée pour la gestion des BEX, ADI et CCPQ. 
+                  La plateforme centralisée pour la gestion des BEX, ADI et CCPQ.
                   Fiabilité, traçabilité et rapidité pour les équipes Laborex Burkina.
                 </Typography>
                 <Stack direction="row" spacing={2}>
@@ -92,7 +92,7 @@ const LandingPage = () => {
               </Stack>
             </Grid>
             <Grid item xs={12} md={6}>
-              <Box sx={{ 
+              <Box sx={{
                 position: 'relative',
                 '&::before': {
                   content: '""',
@@ -106,16 +106,16 @@ const LandingPage = () => {
                   zIndex: 0
                 }
               }}>
-                <img 
-                  src={HeroImage} 
-                  alt="Transit illustration" 
-                  style={{ 
-                    width: '100%', 
-                    borderRadius: '24px', 
+                <img
+                  src={HeroImage}
+                  alt="Transit illustration"
+                  style={{
+                    width: '100%',
+                    borderRadius: '24px',
                     boxShadow: '0 20px 40px rgba(0,0,0,0.2)',
                     position: 'relative',
                     zIndex: 1
-                  }} 
+                  }}
                 />
               </Box>
             </Grid>
@@ -128,9 +128,9 @@ const LandingPage = () => {
         <Grid container spacing={4}>
           {features.map((f, i) => (
             <Grid item xs={12} md={4} key={i}>
-              <Card sx={{ 
-                p: 4, 
-                borderRadius: 4, 
+              <Card sx={{
+                p: 4,
+                borderRadius: 4,
                 height: '100%',
                 boxShadow: '0 10px 30px rgba(0,0,0,0.05)',
                 transition: 'transform 0.3s ease',

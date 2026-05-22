@@ -28,7 +28,7 @@ const Header = ({ drawerToggle }) => {
             <Grid item>
               <Box mt={0.5}>
                 <Typography variant="h3" sx={{ color: '#fff', fontWeight: 700, letterSpacing: '1px' }}>
-                  LABOREX
+                  LABOREX BURKINA
                 </Typography>
               </Box>
             </Grid>
