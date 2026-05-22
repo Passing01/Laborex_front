@@ -20,6 +20,7 @@ import UploadFileIcon from '@mui/icons-material/UploadFile';
 import SearchIcon from '@mui/icons-material/Search';
 import AddIcon from '@mui/icons-material/Add';
 import { useAuth } from 'context/AuthContext';
+import Swal from 'sweetalert2';
 
 const BexList = () => {
   const navigate = useNavigate();
@@ -48,28 +49,61 @@ const BexList = () => {
     try {
       await api.post(`/api/transit/bex/${id}/valider/`);
       fetchBex();
+      await Swal.fire({
+        icon: 'success',
+        title: 'Dossier validé !',
+        text: 'Le dossier BEX a été validé avec succès.',
+        timer: 2500,
+        showConfirmButton: false
+      });
     } catch (err) {
-      alert(`Erreur de validation: ${err.message}`);
+      Swal.fire({
+        icon: 'error',
+        title: 'Erreur de validation',
+        text: err.data?.detail || err.message || 'Une erreur est survenue.'
+      });
     }
   };
 
   const handleFileUpload = async (event) => {
     const file = event.target.files[0];
     if (!file) return;
+    // Reset pour permettre de re-sélectionner le même fichier
+    event.target.value = null;
 
     const formData = new FormData();
     formData.append('file', file);
 
+    Swal.fire({
+      title: 'Importation en cours...',
+      html: `Traitement du fichier <strong>${file.name}</strong>.<br/>Veuillez patienter.`,
+      allowOutsideClick: false,
+      allowEscapeKey: false,
+      didOpen: () => { Swal.showLoading(); }
+    });
+
     setUploading(true);
     try {
-      await api.post('/api/transit/bex/import-excel/', formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data'
-        }
+      const result = await api.post('/api/transit/bex/import-excel/', formData, {
+        headers: { 'Content-Type': 'multipart/form-data' }
       });
-      fetchBex();
+      await fetchBex();
+      Swal.fire({
+        icon: 'success',
+        title: 'Importation réussie !',
+        html: result?.message
+          ? `<p>${result.message}</p>`
+          : `<p>Les dossiers BEX ont été importés avec succès depuis <strong>${file.name}</strong>.</p>`,
+        confirmButtonText: 'Fermer'
+      });
     } catch (err) {
-      alert(`Erreur d'importation: ${err.message}`);
+      const detail = err.data?.detail || err.data?.error || err.message || 'Une erreur inattendue est survenue.';
+      Swal.fire({
+        icon: 'error',
+        title: "Erreur d'importation",
+        html: `<p>${detail}</p><br/><small>Vérifiez que le fichier Excel est au bon format.</small>`,
+        confirmButtonText: 'Compris'
+      });
     } finally {
       setUploading(false);
     }
