@@ -606,6 +606,7 @@ const DefaultDashboard = () => {
       </Grid>
 
       {/* --- GRAPHIQUES (MILIEU DE PAGE) --- */}
+      {!isAgent && (
       <Grid item xs={12}>
         <Grid container spacing={gridSpacing}>
           {/* Bar Chart: Dossiers Processed */}
@@ -710,8 +711,10 @@ const DefaultDashboard = () => {
           </Grid>
         </Grid>
       </Grid>
+      )}
 
       {/* --- TABLEAU DES DOSSIERS EN RETARD --- */}
+      {!isAgent && (
       <Grid item xs={12}>
         <PremiumCard>
           <CardHeader
@@ -798,6 +801,7 @@ const DefaultDashboard = () => {
           </CardContent>
         </PremiumCard>
       </Grid>
+      )}
     </Grid>
   );
 };

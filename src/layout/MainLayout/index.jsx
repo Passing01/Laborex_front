@@ -49,7 +49,7 @@ const MainLayout = () => {
 
   return (
     <Box sx={{ display: 'flex', width: '100%' }}>
-      <AppBar position="fixed" sx={{ zIndex: 1200 }}>
+      <AppBar position="fixed" sx={{ zIndex: 1200, backgroundColor: '#2e7d32' }}>
         <Toolbar>
           <Header drawerOpen={drawerOpen} drawerToggle={handleDrawerToggle} />
         </Toolbar>
