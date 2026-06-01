@@ -299,7 +299,7 @@ const BexDetails = () => {
                           <Button 
                             variant="outlined" 
                             size="small" 
-                            href={doc.fichier} 
+                            href={doc.fichier?.startsWith('http') ? doc.fichier : `${import.meta.env.VITE_API_URL}${doc.fichier}`} 
                             target="_blank"
                             startIcon={<VisibilityIcon />}
                           >
