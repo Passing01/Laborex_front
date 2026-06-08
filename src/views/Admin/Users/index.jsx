@@ -60,12 +60,10 @@ const UserList = () => {
     }
   };
 
-  const handleUnlock = async (userId) => {
+  const handleToggleActive = async (userId, currentStatus) => {
     try {
-      await api.post('/api/users/unlock/', { user_id: userId });
-      // Refresh list
-      const data = await api.get('/api/users/');
-      setUsers(data);
+      await api.patch(`/api/users/${userId}/`, { is_active: !currentStatus });
+      fetchUsers();
     } catch (err) {
       alert(`Erreur: ${err.message}`);
     }
@@ -101,21 +99,29 @@ const UserList = () => {
                   <TableCell><strong>{u.username}</strong></TableCell>
                   <TableCell>{u.first_name} {u.last_name}</TableCell>
                   <TableCell>
-                    <Chip 
-                      label={u.role_display || u.role} 
-                      size="small" 
-                      color={u.role === 'ADMIN' ? 'error' : 'primary'} 
-                      variant="outlined" 
-                    />
+                    <Box display="flex" gap={1}>
+                      <Chip 
+                        label={u.role_display || u.role} 
+                        size="small" 
+                        color={u.role === 'ADMIN' ? 'error' : 'primary'} 
+                        variant="outlined" 
+                      />
+                      <Chip 
+                        label={u.is_active !== false ? 'Actif' : 'Inactif'} 
+                        size="small" 
+                        color={u.is_active !== false ? 'success' : 'default'} 
+                      />
+                    </Box>
                   </TableCell>
                   <TableCell align="right">
                     <Button 
                       size="small" 
-                      color="secondary" 
+                      color={u.is_active !== false ? 'error' : 'success'} 
                       variant="contained"
-                      onClick={() => handleUnlock(u.id)}
+                      onClick={() => handleToggleActive(u.id, u.is_active !== false)}
+                      disabled={u.role === 'ADMIN'}
                     >
-                      Débloquer
+                      {u.is_active !== false ? 'Désactiver' : 'Activer'}
                     </Button>
                   </TableCell>
                 </TableRow>

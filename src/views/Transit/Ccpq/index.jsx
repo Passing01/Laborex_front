@@ -21,6 +21,7 @@ import SearchIcon from '@mui/icons-material/Search';
 import UploadFileIcon from '@mui/icons-material/UploadFile';
 import AddIcon from '@mui/icons-material/Add';
 import Swal from 'sweetalert2';
+import { useAuth } from 'context/AuthContext';
 
 const CcpqList = () => {
   const navigate = useNavigate();
@@ -28,6 +29,9 @@ const CcpqList = () => {
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
   const [uploading, setUploading] = useState(false);
+
+  const { user } = useAuth();
+  const isAdmin = user?.role === 'ADMIN';
 
   const fetchCcpq = async () => {
     try {
@@ -115,26 +119,30 @@ const CcpqList = () => {
       <Box display="flex" justifyContent="space-between" alignItems="center" mb={3}>
         <Typography variant="h3">Dossiers CCPQ</Typography>
         <Box display="flex" gap={2}>
-          <input
-            accept=".xlsx, .xls"
-            style={{ display: 'none' }}
-            id="ccpq-excel-upload"
-            type="file"
-            onChange={handleFileUpload}
-          />
-          <label htmlFor="ccpq-excel-upload">
-            <Button 
-              variant="outlined" 
-              component="span" 
-              startIcon={<UploadFileIcon />}
-              disabled={uploading}
-            >
-              {uploading ? 'Importation...' : 'Importer Excel'}
-            </Button>
-          </label>
-          <Button variant="contained" startIcon={<AddIcon />} component={Link} to="/transit/ccpq/create">
-            Nouveau CCPQ
-          </Button>
+          {!isAdmin && (
+            <>
+              <input
+                accept=".xlsx, .xls"
+                style={{ display: 'none' }}
+                id="ccpq-excel-upload"
+                type="file"
+                onChange={handleFileUpload}
+              />
+              <label htmlFor="ccpq-excel-upload">
+                <Button 
+                  variant="outlined" 
+                  component="span" 
+                  startIcon={<UploadFileIcon />}
+                  disabled={uploading}
+                >
+                  {uploading ? 'Importation...' : 'Importer Excel'}
+                </Button>
+              </label>
+              <Button variant="contained" startIcon={<AddIcon />} component={Link} to="/transit/ccpq/create">
+                Nouveau CCPQ
+              </Button>
+            </>
+          )}
         </Box>
       </Box>
 
@@ -174,18 +182,22 @@ const CcpqList = () => {
                   <TableCell><strong>{ccpq.numero_ccpq}</strong></TableCell>
                   <TableCell>{ccpq.date_depot || 'N/A'}</TableCell>
                   <TableCell>
-                    <TextField
-                      select
-                      size="small"
-                      value={ccpq.statut}
-                      onChange={(e) => handleStatusChange(ccpq.id, e.target.value)}
-                      sx={{ minWidth: 150 }}
-                    >
-                      <MenuItem value="NON_DEMARRE">Non démarré</MenuItem>
-                      <MenuItem value="EN_ANALYSE">En analyse</MenuItem>
-                      <MenuItem value="APPROUVE">Approuvé</MenuItem>
-                      <MenuItem value="REJETE">Rejeté</MenuItem>
-                    </TextField>
+                    {isAdmin ? (
+                      <Chip label={ccpq.statut} color={getStatusColor(ccpq.statut)} size="small" />
+                    ) : (
+                      <TextField
+                        select
+                        size="small"
+                        value={ccpq.statut}
+                        onChange={(e) => handleStatusChange(ccpq.id, e.target.value)}
+                        sx={{ minWidth: 150 }}
+                      >
+                        <MenuItem value="NON_DEMARRE">Non démarré</MenuItem>
+                        <MenuItem value="EN_ANALYSE">En analyse</MenuItem>
+                        <MenuItem value="APPROUVE">Approuvé</MenuItem>
+                        <MenuItem value="REJETE">Rejeté</MenuItem>
+                      </TextField>
+                    )}
                   </TableCell>
                   <TableCell align="right">
                     <Button 

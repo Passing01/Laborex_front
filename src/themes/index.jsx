@@ -197,21 +197,21 @@ export function theme(customization) {
             paddingBottom: '12px',
             '&.Mui-selected': {
               '& .MuiListItemIcon-root': {
-                color: customization.navType === 'dark' ? value.menuHover : value.primary
+                color: customization.navType === 'dark' ? value.menuHover : value.success
               },
-              color: customization.navType === 'dark' ? value.menuHover : value.primary,
-              backgroundColor: customization.navType !== 'dark' ? value.menuHover : value.primary
+              color: customization.navType === 'dark' ? value.menuHover : value.success,
+              backgroundColor: customization.navType !== 'dark' ? value.menuHover : value.success
             },
             '&:hover': {
-              backgroundColor: customization.navType !== 'dark' ? value.menuHover : value.primary,
-              color: customization.navType === 'dark' ? value.menuHover : value.primary,
+              backgroundColor: customization.navType !== 'dark' ? value.menuHover : value.success,
+              color: customization.navType === 'dark' ? value.menuHover : value.success,
               '& .MuiListItemIcon-root': {
-                color: customization.navType === 'dark' ? value.menuHover : value.primary
+                color: customization.navType === 'dark' ? value.menuHover : value.success
               }
             },
             button: {
               '&:hover': {
-                backgroundColor: customization.navType !== 'dark' ? value.menuHover : value.primary
+                backgroundColor: customization.navType !== 'dark' ? value.menuHover : value.success
               }
             }
           }
@@ -225,21 +225,21 @@ export function theme(customization) {
             paddingBottom: '12px',
             '&.Mui-selected': {
               '& .MuiListItemIcon-root': {
-                color: customization.navType === 'dark' ? value.menuHover : value.primary
+                color: customization.navType === 'dark' ? value.menuHover : value.success
               },
-              color: customization.navType === 'dark' ? value.menuHover : value.primary,
-              backgroundColor: customization.navType !== 'dark' ? value.menuHover : value.primary
+              color: customization.navType === 'dark' ? value.menuHover : value.success,
+              backgroundColor: customization.navType !== 'dark' ? value.menuHover : value.success
             },
             '&:hover': {
-              backgroundColor: customization.navType !== 'dark' ? value.menuHover : value.primary,
-              color: customization.navType === 'dark' ? value.menuHover : value.primary,
+              backgroundColor: customization.navType !== 'dark' ? value.menuHover : value.success,
+              color: customization.navType === 'dark' ? value.menuHover : value.success,
               '& .MuiListItemIcon-root': {
-                color: customization.navType === 'dark' ? value.menuHover : value.primary
+                color: customization.navType === 'dark' ? value.menuHover : value.success
               }
             },
             button: {
               '&:hover': {
-                backgroundColor: customization.navType !== 'dark' ? value.menuHover : value.primary
+                backgroundColor: customization.navType !== 'dark' ? value.menuHover : value.success
               }
             }
           }

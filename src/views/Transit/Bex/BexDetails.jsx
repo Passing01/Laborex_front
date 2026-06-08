@@ -123,6 +123,7 @@ const BexDetails = () => {
   if (!bex) return <Box p={3}><Alert severity="error">Dossier BEX introuvable.</Alert></Box>;
 
   const { user } = useAuth();
+  const isAdmin = user?.role === 'ADMIN';
   const canValidate = (user?.role === 'CHEF' || user?.role === 'CHEF_SERVICE') && bex.statut !== 'VALIDE';
 
   return (
@@ -216,60 +217,62 @@ const BexDetails = () => {
             <Box p={3}>
               <Grid container spacing={4}>
                 {/* Colonne Gauche : Upload */}
-                <Grid item xs={12} md={4}>
-                  <Typography variant="subtitle1" mb={2} fontWeight="bold">Ajouter un document</Typography>
-                  <Box 
-                    sx={{ 
-                      p: 3, 
-                      border: '2px dashed #e0e0e0', 
-                      borderRadius: 2, 
-                      bgcolor: '#fafafa',
-                    }}
-                  >
-                    <Box display="flex" flexDirection="column" gap={2}>
-                      <TextField
-                        select
-                        fullWidth
-                        label="Type de document"
-                        value={docType}
-                        onChange={(e) => setDocType(e.target.value)}
-                        size="small"
-                      >
-                        <MenuItem value="FACTURE">Facture Commerciale</MenuItem>
-                        <MenuItem value="ADI">Autorisation ADI</MenuItem>
-                        <MenuItem value="CCPQ">Certificat CCPQ</MenuItem>
-                        <MenuItem value="REC165">Reçu 165</MenuItem>
-                        <MenuItem value="LIQUIDATION">Liquidation Douane</MenuItem>
-                        <MenuItem value="AUTRE">Autre</MenuItem>
-                      </TextField>
-                      
-                      <input
-                        accept="application/pdf,image/*"
-                        style={{ display: 'none' }}
-                        id="doc-upload"
-                        type="file"
-                        onChange={handleFileUpload}
-                      />
-                      <label htmlFor="doc-upload">
-                        <Button 
-                          fullWidth 
-                          variant="contained" 
-                          component="span" 
-                          startIcon={uploading ? <CircularProgress size={20} color="inherit" /> : <FileUploadIcon />}
-                          disabled={uploading}
+                {!isAdmin && (
+                  <Grid item xs={12} md={4}>
+                    <Typography variant="subtitle1" mb={2} fontWeight="bold">Ajouter un document</Typography>
+                    <Box 
+                      sx={{ 
+                        p: 3, 
+                        border: '2px dashed #e0e0e0', 
+                        borderRadius: 2, 
+                        bgcolor: '#fafafa',
+                      }}
+                    >
+                      <Box display="flex" flexDirection="column" gap={2}>
+                        <TextField
+                          select
+                          fullWidth
+                          label="Type de document"
+                          value={docType}
+                          onChange={(e) => setDocType(e.target.value)}
+                          size="small"
                         >
-                          {uploading ? 'Upload en cours...' : 'Choisir le fichier'}
-                        </Button>
-                      </label>
-                      <Typography variant="caption" color="textSecondary" textAlign="center">
-                        PDF, JPG ou PNG (Max 5Mo)
-                      </Typography>
+                          <MenuItem value="FACTURE">Facture Commerciale</MenuItem>
+                          <MenuItem value="ADI">Autorisation ADI</MenuItem>
+                          <MenuItem value="CCPQ">Certificat CCPQ</MenuItem>
+                          <MenuItem value="REC165">Reçu 165</MenuItem>
+                          <MenuItem value="LIQUIDATION">Liquidation Douane</MenuItem>
+                          <MenuItem value="AUTRE">Autre</MenuItem>
+                        </TextField>
+                        
+                        <input
+                          accept="application/pdf,image/*"
+                          style={{ display: 'none' }}
+                          id="doc-upload"
+                          type="file"
+                          onChange={handleFileUpload}
+                        />
+                        <label htmlFor="doc-upload">
+                          <Button 
+                            fullWidth 
+                            variant="contained" 
+                            component="span" 
+                            startIcon={uploading ? <CircularProgress size={20} color="inherit" /> : <FileUploadIcon />}
+                            disabled={uploading}
+                          >
+                            {uploading ? 'Upload en cours...' : 'Choisir le fichier'}
+                          </Button>
+                        </label>
+                        <Typography variant="caption" color="textSecondary" textAlign="center">
+                          PDF, JPG ou PNG (Max 5Mo)
+                        </Typography>
+                      </Box>
                     </Box>
-                  </Box>
-                </Grid>
+                  </Grid>
+                )}
 
                 {/* Colonne Droite : Liste des documents */}
-                <Grid item xs={12} md={8}>
+                <Grid item xs={12} md={isAdmin ? 12 : 8}>
                   <Typography variant="subtitle1" mb={2} fontWeight="bold">Documents existants</Typography>
                   <Grid container spacing={2}>
                     {bex.documents?.map((doc) => (

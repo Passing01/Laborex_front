@@ -22,6 +22,7 @@ import UploadFileIcon from '@mui/icons-material/UploadFile';
 import FileUploadIcon from '@mui/icons-material/FileUpload';
 import AddIcon from '@mui/icons-material/Add';
 import Swal from 'sweetalert2';
+import { useAuth } from 'context/AuthContext';
 
 const AdiList = () => {
   const navigate = useNavigate();
@@ -29,6 +30,9 @@ const AdiList = () => {
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
   const [uploading, setUploading] = useState(false);
+
+  const { user } = useAuth();
+  const isAdmin = user?.role === 'ADMIN';
 
   const fetchAdi = async () => {
     try {
@@ -114,26 +118,30 @@ const AdiList = () => {
       <Box display="flex" justifyContent="space-between" alignItems="center" mb={3}>
         <Typography variant="h3">Dossiers ADI</Typography>
         <Box display="flex" gap={2}>
-          <input
-            accept=".xlsx, .xls"
-            style={{ display: 'none' }}
-            id="adi-excel-upload"
-            type="file"
-            onChange={handleFileUpload}
-          />
-          <label htmlFor="adi-excel-upload">
-            <Button 
-              variant="outlined" 
-              component="span" 
-              startIcon={<UploadFileIcon />}
-              disabled={uploading}
-            >
-              {uploading ? 'Importation...' : 'Importer Excel'}
-            </Button>
-          </label>
-          <Button variant="contained" startIcon={<AddIcon />} component={Link} to="/transit/adi/create">
-            Nouveau ADI
-          </Button>
+          {!isAdmin && (
+            <>
+              <input
+                accept=".xlsx, .xls"
+                style={{ display: 'none' }}
+                id="adi-excel-upload"
+                type="file"
+                onChange={handleFileUpload}
+              />
+              <label htmlFor="adi-excel-upload">
+                <Button 
+                  variant="outlined" 
+                  component="span" 
+                  startIcon={<UploadFileIcon />}
+                  disabled={uploading}
+                >
+                  {uploading ? 'Importation...' : 'Importer Excel'}
+                </Button>
+              </label>
+              <Button variant="contained" startIcon={<AddIcon />} component={Link} to="/transit/adi/create">
+                Nouveau ADI
+              </Button>
+            </>
+          )}
         </Box>
       </Box>
 
@@ -177,18 +185,22 @@ const AdiList = () => {
                   <TableCell>{adi.fournisseur || 'N/A'}</TableCell>
                   <TableCell>{adi.date_reception || 'N/A'}</TableCell>
                   <TableCell>
-                    <TextField
-                      select
-                      size="small"
-                      value={adi.statut}
-                      onChange={(e) => handleStatusChange(adi.id, e.target.value)}
-                      sx={{ minWidth: 120 }}
-                    >
-                      <MenuItem value="EN_ATTENTE">En attente</MenuItem>
-                      <MenuItem value="SOUMIS">Soumis</MenuItem>
-                      <MenuItem value="VALIDE">Valide</MenuItem>
-                      <MenuItem value="REJETE">Rejeté</MenuItem>
-                    </TextField>
+                    {isAdmin ? (
+                      <Chip label={adi.statut} color={getStatusColor(adi.statut)} size="small" />
+                    ) : (
+                      <TextField
+                        select
+                        size="small"
+                        value={adi.statut}
+                        onChange={(e) => handleStatusChange(adi.id, e.target.value)}
+                        sx={{ minWidth: 120 }}
+                      >
+                        <MenuItem value="EN_ATTENTE">En attente</MenuItem>
+                        <MenuItem value="SOUMIS">Soumis</MenuItem>
+                        <MenuItem value="VALIDE">Valide</MenuItem>
+                        <MenuItem value="REJETE">Rejeté</MenuItem>
+                      </TextField>
+                    )}
                   </TableCell>
                   <TableCell align="right">
                     <Button 
