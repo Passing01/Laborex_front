@@ -15,11 +15,13 @@ const MenuList = () => {
   const { user } = useAuth();
   
   const navItems = menuItem.items
+    .filter((item) => {
       // Masquer l'administration pour les non-admins
       if (item.id === 'admin' && user?.role !== 'ADMIN') {
         return false;
       }
       return true;
+    })
     .map((item) => {
       switch (item.type) {
         case 'group':
