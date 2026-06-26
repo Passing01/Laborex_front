@@ -31,7 +31,7 @@ const BexList = () => {
   const [uploading, setUploading] = useState(false);
 
   const isAdmin = user?.role === 'ADMIN';
-  const isChef = user?.role === 'CHEF';
+  const isChef = user?.role === 'CHEF' || user?.role === 'CHEF_SERVICE';
   const isAgent = user?.role === 'AGENT';
 
   const fetchBex = async () => {

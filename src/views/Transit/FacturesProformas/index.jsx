@@ -33,7 +33,7 @@ const FacturesProformasList = () => {
   const [search, setSearch] = useState('');
   const [uploading, setUploading] = useState(false);
 
-  const isChef = user?.role === 'CHEF';
+  const isChef = user?.role === 'CHEF' || user?.role === 'CHEF_SERVICE';
 
   const fetchFactures = async () => {
     try {
