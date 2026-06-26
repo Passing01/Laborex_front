@@ -33,10 +33,7 @@ const FacturesProformasList = () => {
   const [search, setSearch] = useState('');
   const [uploading, setUploading] = useState(false);
 
-  // According to instructions, this is a feature for chef de service,
-  // we will check if the user is chef de service or admin.
-  // We'll show the buttons if they have the rights.
-  const isChefOrAdmin = user?.role === 'CHEF' || user?.role === 'ADMIN';
+  const isChef = user?.role === 'CHEF';
 
   const fetchFactures = async () => {
     try {
@@ -125,7 +122,7 @@ const FacturesProformasList = () => {
       <Box display="flex" justifyContent="space-between" alignItems="center" mb={3}>
         <Typography variant="h3">Factures Proformas</Typography>
         <Box display="flex" gap={2}>
-          {isChefOrAdmin && (
+          {isChef && (
             <>
               <input
                 accept=".xlsx, .xls"
@@ -192,7 +189,7 @@ const FacturesProformasList = () => {
                   <TableCell>{facture.cout_facture}</TableCell>
                   <TableCell align="right">
                     <Box display="flex" justifyContent="flex-end" gap={1}>
-                      {isChefOrAdmin && (
+                      {isChef && (
                         <>
                           <IconButton 
                             size="small" 
