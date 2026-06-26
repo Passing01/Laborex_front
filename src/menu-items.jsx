@@ -73,6 +73,13 @@ export default {
           type: 'item',
           url: '/transit/ccpq',
           icon: icons['GavelOutlinedIcon']
+        },
+        {
+          id: 'factures',
+          title: 'Factures Proformas',
+          type: 'item',
+          url: '/transit/factures-proformas',
+          icon: icons['ChromeReaderModeOutlinedIcon']
         }
       ]
     },
@@ -87,7 +94,9 @@ export default {
           type: 'item',
           url: '/admin/users',
           icon: icons['PeopleOutlinedIcon']
-        },
+        }
+        /*
+        ,
         {
           id: 'settings',
           title: 'Paramètres',
@@ -95,6 +104,7 @@ export default {
           url: '/admin/settings',
           icon: icons['SecurityOutlinedIcon']
         }
+        */
       ]
     }
   ]

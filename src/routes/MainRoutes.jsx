@@ -21,6 +21,10 @@ const CcpqDetails = Loadable(lazy(() => import('views/Transit/Ccpq/CcpqDetails')
 const UserList = Loadable(lazy(() => import('views/Admin/Users/index')));
 const Settings = Loadable(lazy(() => import('views/Admin/Settings/index')));
 
+const FacturesProformasList = Loadable(lazy(() => import('views/Transit/FacturesProformas/index')));
+const CreateFacture = Loadable(lazy(() => import('views/Transit/FacturesProformas/CreateFacture')));
+const FactureDetails = Loadable(lazy(() => import('views/Transit/FacturesProformas/FactureDetails')));
+
 // ==============================|| MAIN ROUTES ||============================== //
 
 import ProtectedRoute from 'component/ProtectedRoute';
@@ -54,6 +58,10 @@ const MainRoutes = {
     { path: '/transit/ccpq', element: <CcpqList /> },
     { path: '/transit/ccpq/create', element: <CreateCcpq /> },
     { path: '/transit/ccpq/:id', element: <CcpqDetails /> },
+    
+    { path: '/transit/factures-proformas', element: <FacturesProformasList /> },
+    { path: '/transit/factures-proformas/create', element: <CreateFacture /> },
+    { path: '/transit/factures-proformas/:id', element: <FactureDetails /> },
     
     // Admin routes
     { path: '/admin/users', element: <UserList /> },
