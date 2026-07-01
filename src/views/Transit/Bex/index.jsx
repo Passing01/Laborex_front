@@ -12,7 +12,12 @@ import {
   Button, 
   Chip,
   TextField,
-  InputAdornment
+  InputAdornment,
+  Tooltip,
+  MenuItem,
+  FormControl,
+  Select,
+  InputLabel
 } from '@mui/material';
 import api from 'api';
 import { Link, useNavigate } from 'react-router-dom';
@@ -28,6 +33,7 @@ const BexList = () => {
   const [bexList, setBexList] = useState([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
+  const [alerteFilter, setAlerteFilter] = useState('TOUS');
   const [uploading, setUploading] = useState(false);
 
   const isAdmin = user?.role === 'ADMIN';
@@ -122,6 +128,53 @@ const BexList = () => {
     }
   };
 
+  const renderAlerteBadge = (alerte_retard) => {
+    if (!alerte_retard) return null;
+    const { statut, jours_restants, deadline } = alerte_retard;
+    
+    let color, label, icon;
+    switch(statut) {
+      case 'NORMAL':
+        color = 'success';
+        label = `Dans les temps (Reste ${jours_restants} j)`;
+        break;
+      case 'PROCHE':
+        color = 'warning';
+        icon = '⚠️';
+        label = `Échéance proche (${jours_restants} j)`;
+        break;
+      case 'DEPASSE':
+        color = 'error';
+        icon = '🚨';
+        label = `En retard de ${Math.abs(jours_restants)} j`;
+        break;
+      case 'TERMINE':
+        color = 'info';
+        label = 'Clôturé';
+        break;
+      default:
+        return null;
+    }
+    
+    return (
+      <Tooltip title={`Date limite: ${deadline || 'N/A'}`}>
+        <Chip 
+          icon={icon ? <span>{icon}</span> : undefined} 
+          label={label} 
+          color={color} 
+          size="small" 
+          variant={statut === 'DEPASSE' ? 'filled' : 'outlined'}
+          sx={statut === 'NORMAL' ? { color: '#10B981', borderColor: '#10B981' } : {}}
+        />
+      </Tooltip>
+    );
+  };
+
+  const filteredBexList = bexList.filter(bex => {
+    if (alerteFilter === 'TOUS') return true;
+    return bex.alerte_retard?.statut === alerteFilter;
+  });
+
   return (
     <Box>
       <Box display="flex" justifyContent="space-between" alignItems="center" mb={3}>
@@ -155,7 +208,7 @@ const BexList = () => {
       </Box>
 
       <Card>
-        <Box p={2}>
+        <Box p={2} display="flex" gap={2}>
           <TextField
             fullWidth
             placeholder="Rechercher par numéro BEX..."
@@ -169,6 +222,21 @@ const BexList = () => {
               ),
             }}
           />
+          <FormControl sx={{ minWidth: 200 }}>
+            <InputLabel id="alerte-filter-label">Filtrer par Alerte</InputLabel>
+            <Select
+              labelId="alerte-filter-label"
+              value={alerteFilter}
+              label="Filtrer par Alerte"
+              onChange={(e) => setAlerteFilter(e.target.value)}
+            >
+              <MenuItem value="TOUS">Tous</MenuItem>
+              <MenuItem value="NORMAL">Dans les temps</MenuItem>
+              <MenuItem value="PROCHE">Échéance proche (Urgent)</MenuItem>
+              <MenuItem value="DEPASSE">En retard</MenuItem>
+              <MenuItem value="TERMINE">Clôturé</MenuItem>
+            </Select>
+          </FormControl>
         </Box>
         <TableContainer>
           <Table>
@@ -179,16 +247,21 @@ const BexList = () => {
                 <TableCell>Fournisseur</TableCell>
                 <TableCell>Date Enlèvement</TableCell>
                 <TableCell>Statut</TableCell>
+                <TableCell>Alerte</TableCell>
                 <TableCell align="right">Actions</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
               {loading ? (
-                <TableRow><TableCell colSpan={6} align="center">Chargement...</TableCell></TableRow>
-              ) : bexList.length === 0 ? (
-                <TableRow><TableCell colSpan={6} align="center">Aucun dossier trouvé</TableCell></TableRow>
-              ) : bexList.map((bex) => (
-                <TableRow key={bex.id} hover>
+                <TableRow><TableCell colSpan={7} align="center">Chargement...</TableCell></TableRow>
+              ) : filteredBexList.length === 0 ? (
+                <TableRow><TableCell colSpan={7} align="center">Aucun dossier trouvé</TableCell></TableRow>
+              ) : filteredBexList.map((bex) => (
+                <TableRow 
+                  key={bex.id} 
+                  hover
+                  sx={bex.alerte_retard?.statut === 'DEPASSE' ? { backgroundColor: '#fee2e2' } : {}}
+                >
                   <TableCell><strong>{bex.numero_bex}</strong></TableCell>
                   <TableCell>{bex.type_bex}</TableCell>
                   <TableCell>{bex.fournisseur}</TableCell>
@@ -199,6 +272,9 @@ const BexList = () => {
                       color={getStatusColor(bex.statut)} 
                       size="small" 
                     />
+                  </TableCell>
+                  <TableCell>
+                    {renderAlerteBadge(bex.alerte_retard)}
                   </TableCell>
                   <TableCell align="right">
                     <Box display="flex" justifyContent="flex-end" gap={1}>

@@ -17,7 +17,8 @@ import {
   MenuItem,
   Avatar,
   CircularProgress,
-  Alert
+  Alert,
+  Tooltip
 } from '@mui/material';
 import { useParams, useNavigate } from 'react-router-dom';
 import api from 'api';
@@ -126,12 +127,41 @@ const BexDetails = () => {
   const isAdmin = user?.role === 'ADMIN';
   const canValidate = (user?.role === 'CHEF' || user?.role === 'CHEF_SERVICE') && bex.statut !== 'VALIDE';
 
+  const renderAlerteBadge = (alerte_retard) => {
+    if (!alerte_retard) return null;
+    const { statut, jours_restants, deadline } = alerte_retard;
+    
+    let color, label, icon;
+    switch(statut) {
+      case 'NORMAL': color = 'success'; label = `Dans les temps (Reste ${jours_restants} j)`; break;
+      case 'PROCHE': color = 'warning'; icon = '⚠️'; label = `Échéance proche (${jours_restants} j)`; break;
+      case 'DEPASSE': color = 'error'; icon = '🚨'; label = `En retard de ${Math.abs(jours_restants)} j`; break;
+      case 'TERMINE': color = 'info'; label = 'Clôturé'; break;
+      default: return null;
+    }
+    
+    return (
+      <Tooltip title={`Date limite: ${deadline || 'N/A'}`}>
+        <Chip 
+          icon={icon ? <span>{icon}</span> : undefined} 
+          label={label} 
+          color={color} 
+          variant={statut === 'DEPASSE' ? 'filled' : 'outlined'}
+          sx={statut === 'NORMAL' ? { color: '#10B981', borderColor: '#10B981', ml: 1 } : { ml: 1 }}
+        />
+      </Tooltip>
+    );
+  };
+
   return (
     <Box>
       <Box display="flex" alignItems="center" justifyContent="space-between" mb={3}>
         <Box display="flex" alignItems="center" gap={2}>
           <Button variant="outlined" startIcon={<ArrowBackIcon />} onClick={() => navigate('/transit/bex')}>Retour</Button>
-          <Typography variant="h3">Dossier BEX: {bex.numero_bex}</Typography>
+          <Box display="flex" alignItems="center">
+            <Typography variant="h3">Dossier BEX: {bex.numero_bex}</Typography>
+            {renderAlerteBadge(bex.alerte_retard)}
+          </Box>
         </Box>
         {canValidate && (
           <Button 

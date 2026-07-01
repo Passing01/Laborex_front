@@ -13,7 +13,11 @@ import {
   Chip,
   TextField,
   InputAdornment,
-  MenuItem
+  MenuItem,
+  Tooltip,
+  FormControl,
+  Select,
+  InputLabel
 } from '@mui/material';
 import api from 'api';
 import { Link, useNavigate } from 'react-router-dom';
@@ -29,6 +33,7 @@ const AdiList = () => {
   const [adiList, setAdiList] = useState([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
+  const [alerteFilter, setAlerteFilter] = useState('TOUS');
   const [uploading, setUploading] = useState(false);
 
   const { user } = useAuth();
@@ -113,6 +118,53 @@ const AdiList = () => {
     }
   };
 
+  const renderAlerteBadge = (alerte_retard) => {
+    if (!alerte_retard) return null;
+    const { statut, jours_restants, deadline } = alerte_retard;
+    
+    let color, label, icon;
+    switch(statut) {
+      case 'NORMAL':
+        color = 'success';
+        label = `Dans les temps (Reste ${jours_restants} j)`;
+        break;
+      case 'PROCHE':
+        color = 'warning';
+        icon = '⚠️';
+        label = `Échéance proche (${jours_restants} j)`;
+        break;
+      case 'DEPASSE':
+        color = 'error';
+        icon = '🚨';
+        label = `En retard de ${Math.abs(jours_restants)} j`;
+        break;
+      case 'TERMINE':
+        color = 'info';
+        label = 'Clôturé';
+        break;
+      default:
+        return null;
+    }
+    
+    return (
+      <Tooltip title={`Date limite: ${deadline || 'N/A'}`}>
+        <Chip 
+          icon={icon ? <span>{icon}</span> : undefined} 
+          label={label} 
+          color={color} 
+          size="small" 
+          variant={statut === 'DEPASSE' ? 'filled' : 'outlined'}
+          sx={statut === 'NORMAL' ? { color: '#10B981', borderColor: '#10B981' } : {}}
+        />
+      </Tooltip>
+    );
+  };
+
+  const filteredAdiList = adiList.filter(adi => {
+    if (alerteFilter === 'TOUS') return true;
+    return adi.alerte_retard?.statut === alerteFilter;
+  });
+
   return (
     <Box>
       <Box display="flex" justifyContent="space-between" alignItems="center" mb={3}>
@@ -146,7 +198,7 @@ const AdiList = () => {
       </Box>
 
       <Card>
-        <Box p={2}>
+        <Box p={2} display="flex" gap={2}>
           <TextField
             fullWidth
             placeholder="Rechercher par numéro ADI..."
@@ -160,6 +212,21 @@ const AdiList = () => {
               ),
             }}
           />
+          <FormControl sx={{ minWidth: 200 }}>
+            <InputLabel id="alerte-filter-label">Filtrer par Alerte</InputLabel>
+            <Select
+              labelId="alerte-filter-label"
+              value={alerteFilter}
+              label="Filtrer par Alerte"
+              onChange={(e) => setAlerteFilter(e.target.value)}
+            >
+              <MenuItem value="TOUS">Tous</MenuItem>
+              <MenuItem value="NORMAL">Dans les temps</MenuItem>
+              <MenuItem value="PROCHE">Échéance proche (Urgent)</MenuItem>
+              <MenuItem value="DEPASSE">En retard</MenuItem>
+              <MenuItem value="TERMINE">Clôturé</MenuItem>
+            </Select>
+          </FormControl>
         </Box>
         <TableContainer>
           <Table>
@@ -170,16 +237,21 @@ const AdiList = () => {
                 <TableCell>Fournisseur</TableCell>
                 <TableCell>Date Réception</TableCell>
                 <TableCell>Statut</TableCell>
+                <TableCell>Alerte</TableCell>
                 <TableCell align="right">Actions</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
               {loading ? (
-                <TableRow><TableCell colSpan={5} align="center">Chargement...</TableCell></TableRow>
-              ) : adiList.length === 0 ? (
-                <TableRow><TableCell colSpan={5} align="center">Aucun dossier trouvé</TableCell></TableRow>
-              ) : adiList.map((adi) => (
-                <TableRow key={adi.id} hover>
+                <TableRow><TableCell colSpan={7} align="center">Chargement...</TableCell></TableRow>
+              ) : filteredAdiList.length === 0 ? (
+                <TableRow><TableCell colSpan={7} align="center">Aucun dossier trouvé</TableCell></TableRow>
+              ) : filteredAdiList.map((adi) => (
+                <TableRow 
+                  key={adi.id} 
+                  hover
+                  sx={adi.alerte_retard?.statut === 'DEPASSE' ? { backgroundColor: '#fee2e2' } : {}}
+                >
                   <TableCell><strong>{adi.numero_adi}</strong></TableCell>
                   <TableCell>{adi.factures || 'N/A'}</TableCell>
                   <TableCell>{adi.fournisseur || 'N/A'}</TableCell>
@@ -201,6 +273,9 @@ const AdiList = () => {
                         <MenuItem value="REJETE">Rejeté</MenuItem>
                       </TextField>
                     )}
+                  </TableCell>
+                  <TableCell>
+                    {renderAlerteBadge(adi.alerte_retard)}
                   </TableCell>
                   <TableCell align="right">
                     <Button 

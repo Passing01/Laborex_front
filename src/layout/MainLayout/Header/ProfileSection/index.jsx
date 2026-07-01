@@ -3,6 +3,7 @@ import React from 'react';
 // material-ui
 import { useTheme } from '@mui/material/styles';
 import { Fade, Button, ClickAwayListener, Paper, Popper, List, ListItemText, ListItemIcon, ListItemButton } from '@mui/material';
+import { Link } from 'react-router-dom';
 
 // assets
 import PersonTwoToneIcon from '@mui/icons-material/PersonTwoTone';
@@ -107,17 +108,19 @@ const ProfileSection = () => {
                     borderRadius: '10px'
                   }}
                 >
-                  <ListItemButton selected={selectedIndex === 0} onClick={(event) => handleListItemClick(event, 0)}>
-                    <ListItemIcon>
-                      <SettingsTwoToneIcon />
-                    </ListItemIcon>
-                    <ListItemText primary="Settings" />
-                  </ListItemButton>
-                  <ListItemButton selected={selectedIndex === 1} onClick={(event) => handleListItemClick(event, 1)}>
+                  <ListItemButton 
+                    component={Link} 
+                    to="/profile" 
+                    selected={selectedIndex === 1} 
+                    onClick={(event) => { 
+                      handleListItemClick(event, 1); 
+                      handleClose(event); 
+                    }}
+                  >
                     <ListItemIcon>
                       <PersonTwoToneIcon />
                     </ListItemIcon>
-                    <ListItemText primary="Profile" />
+                    <ListItemText primary="Mon Profil" />
                   </ListItemButton>
                   <ListItemButton selected={selectedIndex === 4} onClick={handleLogout}>
                     <ListItemIcon>

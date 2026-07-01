@@ -25,6 +25,8 @@ const FacturesProformasList = Loadable(lazy(() => import('views/Transit/Factures
 const CreateFacture = Loadable(lazy(() => import('views/Transit/FacturesProformas/CreateFacture')));
 const FactureDetails = Loadable(lazy(() => import('views/Transit/FacturesProformas/FactureDetails')));
 
+const Profile = Loadable(lazy(() => import('views/Profile/index')));
+
 // ==============================|| MAIN ROUTES ||============================== //
 
 import ProtectedRoute from 'component/ProtectedRoute';
@@ -62,6 +64,9 @@ const MainRoutes = {
     { path: '/transit/factures-proformas', element: <FacturesProformasList /> },
     { path: '/transit/factures-proformas/create', element: <CreateFacture /> },
     { path: '/transit/factures-proformas/:id', element: <FactureDetails /> },
+    
+    // User routes
+    { path: '/profile', element: <Profile /> },
     
     // Admin routes
     { path: '/admin/users', element: <UserList /> },
