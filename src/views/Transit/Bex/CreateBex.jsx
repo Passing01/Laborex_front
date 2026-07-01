@@ -53,10 +53,18 @@ const CreateBex = () => {
         validationSchema={BexSchema}
         onSubmit={async (values, { setSubmitting, setStatus }) => {
           try {
-            await api.post('/api/transit/bex/', values);
+            const payload = { ...values };
+            if (!payload.date_enlevement_prevue) {
+              payload.date_enlevement_prevue = null;
+            }
+            await api.post('/api/transit/bex/', payload);
             navigate('/transit/bex');
           } catch (err) {
-            setStatus({ error: err.message });
+            const errorData = err.response?.data || err.data;
+            const errorMsg = errorData 
+              ? (typeof errorData === 'object' ? JSON.stringify(errorData) : errorData)
+              : err.message;
+            setStatus({ error: errorMsg });
           } finally {
             setSubmitting(false);
           }

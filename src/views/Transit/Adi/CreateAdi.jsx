@@ -58,14 +58,18 @@ const CreateAdi = () => {
           try {
             // Clean values: convert empty strings to null or appropriate types if needed
             const cleanedValues = { ...values };
-            ['nb_items', 'quantite', 'asi', 'cout'].forEach(field => {
+            ['nb_items', 'quantite', 'asi', 'cout', 'date_depot', 'date_reception'].forEach(field => {
               if (cleanedValues[field] === '') cleanedValues[field] = null;
             });
             
             await api.post('/api/transit/adi/', cleanedValues);
             navigate('/transit/adi');
           } catch (err) {
-            setStatus({ error: err.message });
+            const errorData = err.response?.data || err.data;
+            const errorMsg = errorData 
+              ? (typeof errorData === 'object' ? JSON.stringify(errorData) : errorData)
+              : err.message;
+            setStatus({ error: errorMsg });
           } finally {
             setSubmitting(false);
           }
