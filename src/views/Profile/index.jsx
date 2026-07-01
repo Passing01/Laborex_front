@@ -28,7 +28,7 @@ const Profile = () => {
   useEffect(() => {
     const fetchProfile = async () => {
       try {
-        const data = await api.get('/api/users/me/');
+        const data = await api.get('/api/me/');
         setUserInfo(data);
         setFormData({
           first_name: data.first_name || '',
@@ -75,7 +75,7 @@ const Profile = () => {
         payload.password = formData.password;
       }
       
-      const response = await api.put('/api/users/me/', payload);
+      const response = await api.put('/api/me/', payload);
       
       Swal.fire({
         icon: 'success',
