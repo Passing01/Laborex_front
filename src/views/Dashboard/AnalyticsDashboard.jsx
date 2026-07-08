@@ -327,6 +327,9 @@ const AnalyticsDashboard = () => {
   const isAgent = user?.role === 'AGENT';
   const roleLabel = isAgent ? 'Agent de Transit' : user?.role === 'CHEF_SERVICE' ? 'Chef de Service' : 'Administrateur (RSI)';
 
+  const periodLabels = { semaine: 'CETTE SEMAINE', mois: 'CE MOIS', trimestre: 'CE TRIMESTRE' };
+  const currentPeriodLabel = periodLabels[periode] || 'SUR LA PÉRIODE';
+
   return (
     <Box>
       <Grid container spacing={gridSpacing}>
@@ -563,7 +566,7 @@ const AnalyticsDashboard = () => {
                   <Box display="flex" justifyContent="space-between" alignItems="flex-start" zIndex={1} position="relative">
                     <Box>
                       <Typography variant="subtitle2" color="textSecondary" fontWeight={600} gutterBottom>
-                        DÉLAIS MOYENS CE MOIS
+                        DÉLAIS MOYENS {currentPeriodLabel}
                       </Typography>
                       <Box display="flex" gap={1.5} alignItems="baseline" mt={1}>
                         <Typography variant="h3" sx={{ color: '#f57c00', fontWeight: 700 }}>
